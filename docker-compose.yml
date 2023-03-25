@@ -4,7 +4,19 @@ services:
     build: 
       context: ./web
       dockerfile: Dockerfile
-    command: sh -c "chown -R 777 /var/www/html && php bin/magento setup:install --base-url=http://localhost/ --db-host=mysql --db-name=magento2 --db-user=root --db-password=root --admin-firstname=Luis --admin-lastname=Ortega --admin-email=admin@tiendamia.com --admin-user=admin --admin-password=admin1234. --use-rewrites=1 --backend-frontname=admin --elasticsearch-host=http://elasticsearch:9200 && php bin/magento setup:di:compile && chmod -R 0777 var/ pub/ generated/ && service apache2 restart && tail -F anything"
+    command: > 
+      sh -c "chown -R 0777 var/ pub/ generated/ 
+      && sleep 1m
+      && php bin/magento setup:install --base-url=http://localhost/ --db-host=mysql --db-name=magento2 --db-user=root --db-password=root --admin-firstname=Luis --admin-lastname=Ortega --admin-email=admin@tiendamia.com --admin-user=admin --admin-password=admin1234. --use-rewrites=1 --backend-frontname=admin --elasticsearch-host=http://elasticsearch:9200 
+      && php bin/magento module:enable Vendor_ChangePrice 
+      && php bin/magento setup:db-declaration:generate-whitelist --module-name=Vendor_ChangePrice
+      && php bin/magento setup:di:compile 
+      && php bin/magento setup:upgrade
+      && php app/code/Vendor/ChangePrice/addProducts.php 
+      && php app/code/Vendor/ChangePrice/addProducts2.php 
+      && chmod -R 0777 var/ pub/ generated/ 
+      && service apache2 restart 
+      && tail -F anything"
     networks:
       -  es-net
     ports:

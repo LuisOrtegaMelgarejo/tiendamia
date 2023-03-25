@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="sales_order_item" resource="sales">
+        <column xsi:type="int" name="offerid" unsigned="true" nullable="false" identity="false"  default="0"/>
+    </table>
+    <table name="quote_item" resource="quote">
+        <column xsi:type="int" name="offerid" unsigned="true" nullable="false" identity="false"  default="0"/>
+    </table>
+    <table name="report" resource="cron">
+        <column xsi:type="int" name="id" unsigned="true" nullable="false" identity="true"/>
+        <column xsi:type="varchar" name="sku" nullable="false" length="100"/>
+        <column xsi:type="varchar" name="date" nullable="false" length="10"/>
+        <column xsi:type="int" name="count" nullable="false" identity="false"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+</schema>
