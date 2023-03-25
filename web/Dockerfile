@@ -1,5 +1,8 @@
 FROM php:7.4-apache
 
+RUN cd /usr/local/etc/php/conf.d/ && \
+  echo 'memory_limit = -1' >> /usr/local/etc/php/conf.d/docker-php-ram-limit.ini
+
 RUN apt update && apt install -y git
 
 RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
@@ -14,8 +17,6 @@ COPY magento/ ./
 
 RUN composer install
 
-RUN chown -R www-data:www-data /var/www/html
-
-RUN a2enmod rewrite && service apache2 restart
+RUN a2enmod rewrite
 
 EXPOSE 80/tcp
